@@ -27,7 +27,7 @@ void setup(){
   readings.addColumn("LC1");
   readings.addColumn("LC2");
   readings.addColumn("LC3");
-  saveTable(readings, ###use absolute filepath"/readings.csv");
+  saveTable(readings, "/Users/dulanya/Desktop/Spring\ 2022/STAR/readings.csv");
   
   //writes and saves data in .csv
   cp5.addButton("store_readings")     
@@ -90,7 +90,7 @@ void getReadings(Serial port){
 //writes + saves readings table in a .csv
 void store_readings(){
    getReadings(port);
-   saveTable(readings, ######use absolute path here"/readings.csv");
+   saveTable(readings, "/Users/dulanya/Desktop/Spring\ 2022/STAR/readings.csv");
 }
 
 //doesn't do anything rn

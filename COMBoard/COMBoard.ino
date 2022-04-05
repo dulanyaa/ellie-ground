@@ -118,12 +118,34 @@ void setup() {
   }
   // Register for a callback function that will be called when data is received
   esp_now_register_recv_cb(OnDataRecv);
+
+  // testing GUI - prints to serial
+  struct_message testReadings; 
+  incomingPT1 = 11;
+  incomingPT2 = 12;
+  incomingPT3 = 13;
+  incomingPT4 = 14;
+  incomingPT5 = 15;
+  incomingFM = 21;
+  incomingLC1 = 31;
+  incomingLC2 = 32;
+  incomingLC3 = 33;
+
+  Readings[0] = testReadings;
+  read_count++;
+  
 }
 
 
 void loop() {
+  if (Serial.availbale()){
+    //String gui_instruction = Serial.read();
+    sendReadings();
+  }
   // put your main code here, to run repeatedly:
   pressed = digitalRead(buttonpin1); //push button to send servo signals
+
+  
 
   // Serial.println("incomingS1, "+String(incomingS1)+", servo1_curr, "+String(servo1_curr));
   if (incomingS1 == 90) {
@@ -187,36 +209,6 @@ void loop() {
   //   prevval2 = currval2;
   //   prevval3 = currval3;
 
-
-  // GUI Communication
-
-  //sends computer all readings received until that time when promtpted by the GUI
-  void sendReadings(){
-    if (Serial.availbale()){
-    String gui_instruction = Serial.read();
-    
-    if(gui_instruction == "Asking for readings"){      
-        for(int i = 0; i < read_count; i++){
-          printReadings(Readings[i], "PT", 4);
-          printReadings(Readings[i], "FM", 1);
-          printReadings(Readings[i], "LC", 3);
-          Serial.println();
-        }
-      }
-    }
-  }
-
-  // Given a set of readings outputs each *type* of reading (PT, FM, or LC) 
-  // to serial to communicate with processing GUI
-  void printReadings(struct_message curr_reading, String type, int num_readings){
-    String val;
-    for (int i = 0; i < num_readings; i++){
-      val = "incoming" + type + i;
-      Serial.print(curr_reading.val);
-      Serial.print(",");
-    }  
-  }
-
   
 
   ///part to deal with MATLAB interfacing
@@ -273,3 +265,29 @@ void loop() {
   delay(50); //delay of 50 optimal for recieving and transmitting
 
 }
+
+  // GUI Communication
+
+  //sends computer all readings received until that time when promtpted by the GUI
+  void sendReadings(){
+    if (true){
+    //if(gui_instruction == "Asking for readings"){      
+        for(int i = 0; i < read_count; i++){
+          printReadings(Readings[i], "PT", 4);
+          printReadings(Readings[i], "FM", 1);
+          printReadings(Readings[i], "LC", 3);
+          Serial.println();
+        }
+      }
+  }
+
+  // Given a set of readings outputs each *type* of reading (PT, FM, or LC) 
+  // to serial to communicate with processing GUI
+  void printReadings(struct_message curr_reading, String type, int num_readings){
+    String val;
+    for (int i = 0; i < num_readings; i++){
+      val = "incoming" + type + i;
+      Serial.print(curr_reading.val);
+      Serial.print(",");
+    }  
+  }
